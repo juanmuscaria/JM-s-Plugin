@@ -4,7 +4,6 @@ description: ${description}
 load: STARTUP
 author: juanmuscaria
 website: https://juanmuscaria.github.io
-main: io.github.juanmuscaria.jmplugin.core.JMCore
-softdepend:
-  - ProtocolLib
-  - Vault
+main: io.github.juanmuscaria.jmplugin.essentials.JMEssentials
+depend:
+  - jmcore

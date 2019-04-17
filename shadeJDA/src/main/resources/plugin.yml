@@ -1,8 +1,0 @@
-name: JDA
-version: 1.0-SNAPSHOT
-description: Um plugin que carrega o JDA no runtime!
-load: STARTUP
-author: juanmuscaria
-website: https://juanmuscaria.github.io
-main: io.github.juanmuscaria.jmplugin.shadeJDA.main
-
