@@ -6,16 +6,16 @@ public interface IReload {
     /**
      * Executa a função de recarregar a class, sera chamando quando o plugin for recarregado.
      */
-    void Reload();
+    void reload();
 
     /**
-     * Executa a função de Save() e para as ações da classe, sera chamando quando o plugin for Desabilitado.
+     * Executa a função de save() e para as ações da classe, sera chamando quando o plugin for Desabilitado.
      */
-    void Disable();
+    void disable();
 
     /**
      * Executa a função de salvar os dados da classe, sera chamando periodicamente.
      */
-    void Save();
+    void save();
 
 }

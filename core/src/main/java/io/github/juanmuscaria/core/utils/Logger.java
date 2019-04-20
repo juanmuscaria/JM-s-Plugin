@@ -17,7 +17,7 @@ public class Logger {
 
     //debug
     public static void Debug(String text) {
-        if (JMCore.GlobalPluginConfig.Get().getBoolean("debug"))
+        if (JMCore.globalPluginConfig.Get().getBoolean("debug"))
             CCS.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "JMdebug" + ChatColor.DARK_AQUA + "]" + ChatColor.WHITE + text);
     }
 

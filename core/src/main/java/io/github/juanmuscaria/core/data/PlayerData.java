@@ -46,7 +46,7 @@ public class PlayerData implements IReload {
             this.Name = this.OfflinePlayerObj.getName();
 
         }
-        this.Reload();
+        this.reload();
         if (!this.Offline && this.Login) {
             if (this.Data.getString("Player.FirstLogin") == null) {
                 this.Data.set("Player.FirstLogin", LocalTime.now().toString());
@@ -58,7 +58,7 @@ public class PlayerData implements IReload {
         Logger.Debug("Instancia criada!");
     }
 
-    public void Save() {
+    public void save() {
         Logger.Debug("Salvando Player data do player: " + ChatColor.GREEN + Name);
         if (this.Data == null || this.DataFile == null) {
             return;
@@ -71,18 +71,18 @@ public class PlayerData implements IReload {
         }
     }
 
-    public void Disable() {
+    public void disable() {
         if (!this.Offline && this.Login) {
             this.Data.set("Player.Logoff", LocalTime.now().toString());
             Vector position = PlayerObj.getLocation().toVector();
             this.Data.set("Player.LogoffPosition", position);
         }
         Logger.Debug("Deletando uma instancia do Player data do player: " + ChatColor.GREEN + Name);
-        this.Save();
+        this.save();
     }
 
-    public void Reload() {
-        Utils.CreateFolder("PlayerData");
+    public void reload() {
+        Utils.createFolder("PlayerData");
         if (this.DataFile == null) {
             this.DataFile = new File(JMCore.getInstance().getDataFolder() + File.separator + "PlayerData", this.OfflineName + ".yml");
         }
@@ -93,7 +93,7 @@ public class PlayerData implements IReload {
             this.Data.set("Player.uuid", PlayerObj.getUniqueId().toString());
             this.Data.set("Player.ip", PlayerObj.getAddress().toString());
         }
-        this.Save();
+        this.save();
     }
 
     public boolean IsOfflineData() {

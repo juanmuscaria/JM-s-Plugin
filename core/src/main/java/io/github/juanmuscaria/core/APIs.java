@@ -26,7 +26,7 @@ public class APIs {
     public static boolean hasProtocolLib = false;
     public static boolean hasVault = false;
 
-    public static void LoadAPIs() {
+    public static void loadAPIs() {
         Logger.Debug("Tentando carregar APIs");
         try {
             ncpApi = NCPAPIProvider.getNoCheatPlusAPI();

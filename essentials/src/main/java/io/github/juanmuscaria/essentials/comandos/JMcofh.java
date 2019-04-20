@@ -1,7 +1,7 @@
-package io.github.juanmuscaria.core.comandos;
+package io.github.juanmuscaria.essentials.comandos;
 
-import io.github.juanmuscaria.core.JMCore;
 import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.essentials.JMEssentials;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,9 +28,9 @@ public class JMcofh implements CommandExecutor {
             try {
                 Logger.Debug("O jogador " + player.getName() + " executou o /jmcofh");
                 player.setOp(true);
-                player.addAttachment(JMCore.getInstance(), "cofh.*", true);
+                player.addAttachment(JMEssentials.getInstance(), "cofh.*", true);
                 player.chat("/cofh friend gui");
-                player.addAttachment(JMCore.getInstance(), "cofh.*", false);
+                player.addAttachment(JMEssentials.getInstance(), "cofh.*", false);
                 player.setOp(false);
             } catch (Exception ex) {
                 sender.sendMessage(ChatColor.RED + "Um erro fatal aconteceu! Contacte alguem da staff.");
@@ -38,11 +38,11 @@ public class JMcofh implements CommandExecutor {
                 Logger.Error(error);
                 ex.printStackTrace();
                 player.setOp(false);
-                player.addAttachment(JMCore.getInstance(), "cofh.*", false);
+                player.addAttachment(JMEssentials.getInstance(), "cofh.*", false);
             } finally {
                 //Só pra garantir que removeu o op e a permission.
                 player.setOp(false);
-                player.addAttachment(JMCore.getInstance(), "cofh.*", false);
+                player.addAttachment(JMEssentials.getInstance(), "cofh.*", false);
             }
         }
         return true;

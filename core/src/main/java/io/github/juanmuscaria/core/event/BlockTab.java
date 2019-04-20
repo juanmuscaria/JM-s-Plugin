@@ -28,13 +28,13 @@ public class BlockTab extends PacketAdapter implements IEvent {
     }
 
     @Override
-    public void Reload() {/* Esse evento não precisa disso. */}
+    public void reload() {/* Esse evento não precisa disso. */}
 
     @Override
-    public void Disable() {
+    public void disable() {
         APIs.protocolManager.removePacketListener(this);
     }
 
     @Override
-    public void Save() {/* Esse evento não precisa disso. */}
+    public void save() {/* Esse evento não precisa disso. */}
 }

@@ -17,7 +17,7 @@ import static io.github.juanmuscaria.core.utils.NMS.getOBClass;
 
 
 public class Utils {
-    public static void CreateFolder(String Name) {
+    public static void createFolder(String Name) {
         try {
             File Folder = new File(JMCore.getInstance().getDataFolder() + File.separator + Name);
             if (!Folder.exists())
@@ -90,6 +90,7 @@ public class Utils {
             getNMSClass("NBTCompressedStreamTools").getMethod("a", nbtTagCompoundClass, DataOutput.class).invoke(null, nbtTagCompound, dataOutput);
 
         } catch (ReflectiveOperationException e) {
+            Logger.Error("Occoreu um erro ao tentar serializar uma item stack!");
             e.printStackTrace();
         }
 

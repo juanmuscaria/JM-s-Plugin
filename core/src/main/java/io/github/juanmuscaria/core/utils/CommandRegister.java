@@ -7,50 +7,35 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 
 //Baseado no "https://github.com/RUSHyoutuber/System"
-public class CommandLoader {
-    private static final Config Commands = new Config("comandos");
-    private static final FileConfiguration CONFIG = Commands.Get();
-    private CommandExecutor executor;
-    private String command;
-    private List<String> aliases;
-    private String description;
-    private String permissionMessage;
-    private String permission;
-    private PluginCommand pluginCommand;
+public class CommandRegister {
 
-    /**
-     * Carrega dinamicamente um comando!
-     *
-     * @param command    O nome do comando que será executado apos o /.
-     * @param permission A permissão que o jodador deverá ter para usar o comando.
-     * @param cExecutor  Uma classe que estenda a interface CommandExecutor que será responsavel por executar o comando.
-     */
-    public CommandLoader(String command, String permission, CommandExecutor cExecutor) {
-        boolean enable = CONFIG.getBoolean("comandos." + command + ".ativar-comando");
 
+    public static void register(String command, String permission, @NotNull CommandExecutor commandExecutor, @NotNull Config config, @Nullable TabCompleter tabCompleter) {
+        FileConfiguration commandConfig = config.Get();
+        boolean enable = commandConfig.getBoolean("commands." + command + ".enable");
         if (enable) {
             Logger.Debug("Registrando o comando: " + ChatColor.GREEN + command);
-            this.executor = cExecutor;
-            this.command = command;
-            this.aliases = CONFIG.getStringList("comandos." + command + ".aliases");
-            this.description = CONFIG.getString("comandos." + command + ".descricao");
-            this.permissionMessage = CONFIG.getString("comandos." + command + ".sem-permissao").replace('&', '§');
-            this.permission = permission;
-            this.pluginCommand = createPluginCommand();
-            registerPluginCommand();
+            List<String> aliases = commandConfig.getStringList("comandos." + command + ".aliases");
+            String description = commandConfig.getString("comandos." + command + ".descricao");
+            String permissionMessage = commandConfig.getString("comandos." + command + ".sem-permissao").replace('&', '§');
+            PluginCommand pluginCommand = createPluginCommand(command, aliases, permission, permissionMessage, description, commandExecutor, tabCompleter);
+            registerPluginCommand(pluginCommand);
         }
-
     }
 
-    private PluginCommand createPluginCommand() {
+    @Nullable
+    private static PluginCommand createPluginCommand(String command, List<String> aliases, String permission, String permissionMessage, String description, CommandExecutor executor, @Nullable TabCompleter tabCompleter) {
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
             c.setAccessible(true);
@@ -61,16 +46,17 @@ public class CommandLoader {
             cmd.setPermissionMessage(permissionMessage);
             cmd.setDescription(description);
             cmd.setExecutor(executor);
-
+            if (!(tabCompleter == null)) cmd.setTabCompleter(tabCompleter);
             return cmd;
         } catch (ReflectiveOperationException e) {
+            Logger.Error("Ocorreu um erro ao registrar o comando:" + command);
             e.printStackTrace();
         }
 
         return null;
     }
 
-    private void registerPluginCommand() {
+    private static void registerPluginCommand(PluginCommand pluginCommand) {
         if (pluginCommand == null) return;
 
         try {
@@ -83,6 +69,7 @@ public class CommandLoader {
                 commandMap.register(JMCore.getInstance().getName().toLowerCase(), pluginCommand);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
+            Logger.Error("Ocorreu um erro ao registrar o comando:" + pluginCommand.getName());
             e.printStackTrace();
         }
     }

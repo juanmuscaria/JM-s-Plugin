@@ -39,7 +39,7 @@ public class BlockCommand implements Listener, IEvent {
                         "preaquecido, por aproximadamente 40 minutos ou ao furar o bolo com um garfo, este saia limpo");
                 event.setCancelled(true);
             }
-        YamlConfiguration config = JMCore.GlobalPluginConfig.Get();
+        YamlConfiguration config = JMCore.globalPluginConfig.Get();
 
         for (String str : config.getStringList("blockedcmds.cmdlist"))
             if (event.getMessage().toLowerCase().startsWith(str) || event.getMessage().equalsIgnoreCase(str)) {
@@ -50,12 +50,12 @@ public class BlockCommand implements Listener, IEvent {
     }
 
     @Override
-    public void Reload() {/* Esse evento n precisa disso. */}
+    public void reload() {/* Esse evento n precisa disso. */}
 
     @Override
-    public void Disable() {/* Esse evento n precisa disso.*/}
+    public void disable() {/* Esse evento n precisa disso.*/}
 
     @Override
-    public void Save() {/* Esse evento n precisa disso*/}
+    public void save() {/* Esse evento n precisa disso*/}
 
 }

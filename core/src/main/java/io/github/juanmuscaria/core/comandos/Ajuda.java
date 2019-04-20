@@ -10,8 +10,8 @@ import java.util.List;
 public class Ajuda implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        String head = JMCore.GlobalPluginConfig.Get().getString("ajuda.head").replace('&', '§');
-        List<String> lines = JMCore.GlobalPluginConfig.Get().getStringList("ajuda.lines");
+        String head = JMCore.globalPluginConfig.Get().getString("ajuda.head").replace('&', '§');
+        List<String> lines = JMCore.globalPluginConfig.Get().getStringList("ajuda.lines");
         StringBuilder sb = new StringBuilder();
         sb.append(head).append("\n");
         for (String s : lines) sb.append(s.replace('&', '§')).append("\n");

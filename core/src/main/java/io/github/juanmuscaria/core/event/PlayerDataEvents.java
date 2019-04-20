@@ -17,19 +17,19 @@ public class PlayerDataEvents implements Listener, IEvent {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void OnJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         PlayerData data = new PlayerData(event.getPlayer().getName().toLowerCase(), false, true);
         Logger.Debug("Colocando instancia no hashmap");
-        JMCore.getInstance().Players.put(event.getPlayer().getName().toLowerCase(), data);
+        JMCore.getInstance().playerDataHashMap.put(event.getPlayer().getName().toLowerCase(), data);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void OnQuit(PlayerQuitEvent event) {
+    public void onQuit(PlayerQuitEvent event) {
         String player = event.getPlayer().getName();
         Logger.Debug("Tirando instancia do hashmap!");
         try {
-            JMCore.getInstance().Players.get(event.getPlayer().getName().toLowerCase()).Disable();
-            JMCore.getInstance().Players.remove(event.getPlayer().getName().toLowerCase());
+            JMCore.getInstance().playerDataHashMap.get(event.getPlayer().getName().toLowerCase()).disable();
+            JMCore.getInstance().playerDataHashMap.remove(event.getPlayer().getName().toLowerCase());
         } catch (NullPointerException e) {
             //TODO: Fazer algo caso ocorra esse erro
             Logger.Error("Ocorreu um erro ao tentar tirar uma instancia do hashmap");
@@ -39,17 +39,17 @@ public class PlayerDataEvents implements Listener, IEvent {
     }
 
     @Override
-    public void Reload() {
+    public void reload() {
 
     }
 
     @Override
-    public void Disable() {
+    public void disable() {
 
     }
 
     @Override
-    public void Save() {
+    public void save() {
     }
 
 }
