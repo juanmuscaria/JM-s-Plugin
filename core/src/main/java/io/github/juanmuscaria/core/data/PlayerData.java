@@ -1,123 +1,125 @@
 package io.github.juanmuscaria.core.data;
 
-
 import io.github.juanmuscaria.core.JMCore;
 import io.github.juanmuscaria.core.utils.Logger;
-import io.github.juanmuscaria.core.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalTime;
+import java.util.HashMap;
 
-//TODO:(re)Fazer o sistema de player data (incompleto)
+@SuppressWarnings("unchecked")
 public class PlayerData implements IReload {
-    private Player PlayerObj;
-    private OfflinePlayer OfflinePlayerObj;
-    private String Name;
-    private String OfflineName;
-    private Boolean Offline;
-    private YamlConfiguration Data;
-    private File DataFile;
-    private Boolean Login;
-    private LocalTime Time;
+    private Boolean offlineData = false;
+    private String playerName;
+    private File dataFile;
+    private LocalTime onTimeCache;
+    private HashMap<String, Object> dataHashMap;
 
-    @SuppressWarnings("deprecation")
-    public PlayerData(String p, Boolean off, Boolean login) {
-        Logger.Debug("Criando uma nova instancia do Player data para o player: " + ChatColor.GREEN + p);
-        this.Login = login;
-        if (off == null) this.Offline = false;
-        else this.Offline = off;
-        if (Bukkit.getPlayer(p) == null) Offline = true;
-        if (!Offline) {
-            this.PlayerObj = Bukkit.getPlayer(p);
-            this.Name = this.PlayerObj.getName();
-            this.OfflineName = this.PlayerObj.getName().toLowerCase();
-            this.OfflinePlayerObj = Bukkit.getOfflinePlayer(p);
+    public PlayerData(String player) {
+        Logger.Debug("Criando uma nova instancia do PlayerData para o player: " + ChatColor.GREEN + player);
+        this.playerName = player;
+        if (Bukkit.getPlayer(player) == null) offlineData = true;
+        this.dataFile = new File(JMCore.getInstance().getDataFolder() + File.separator + "PlayerData", this.playerName + ".ser");
+        if (offlineData) {
+            load();
         } else {
-            this.PlayerObj = null;
-            this.OfflineName = p.toLowerCase();
-            this.OfflinePlayerObj = Bukkit.getOfflinePlayer(p);
-            this.Name = this.OfflinePlayerObj.getName();
+            load();
+            dataHashMap.put("player.ip", Bukkit.getPlayer(player).getAddress().getHostString());
+            dataHashMap.put("player.uuid", Bukkit.getPlayer(player).getUniqueId());
+            this.onTimeCache = LocalTime.now();
+            dataHashMap.computeIfAbsent("player.firstlogin", k -> onTimeCache);
+        }
 
-        }
-        this.reload();
-        if (!this.Offline && this.Login) {
-            if (this.Data.getString("Player.FirstLogin") == null) {
-                this.Data.set("Player.FirstLogin", LocalTime.now().toString());
-                this.Data.set("Player.Login", LocalTime.now().toString());
-                this.Data.set("Player.isOp", false);
-            }
-        }
-        this.Time = LocalTime.now();
         Logger.Debug("Instancia criada!");
     }
 
-    public void save() {
-        Logger.Debug("Salvando Player data do player: " + ChatColor.GREEN + Name);
-        if (this.Data == null || this.DataFile == null) {
-            return;
+    private void load() {
+        if (dataFile.exists()) {
+            try {
+                FileInputStream fis = new FileInputStream(dataFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                this.dataHashMap = (HashMap<String, Object>) ois.readObject();
+                ois.close();
+                fis.close();
+            } catch (IOException | ClassCastException | ClassNotFoundException e) {
+                Logger.Error("Falha ao carregar playerdata de: " + playerName + ". Criando uma nova.");
+                e.printStackTrace();
+                this.dataHashMap = new HashMap<>();
+            }
+        } else {
+            Logger.Debug("Arquivo de playerdata não existente, criando um novo.");
+            this.dataHashMap = new HashMap<>();
+            this.save();
         }
+    }
+
+    public void save() {
+        Logger.Debug("Salvando Player data do player: " + ChatColor.GREEN + playerName);
         try {
-            this.Data.save(this.DataFile);
-        } catch (IOException ex) {
-            Logger.Error("Não foi possivel salvar o PlayerData: " + this.DataFile.getPath() + ",do jogador:" + this.Name);
-            ex.printStackTrace();
+            FileOutputStream fos = new FileOutputStream(this.dataFile);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this.dataHashMap);
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            Logger.Error("Falha ao salvar playerdata de: " + playerName);
+            e.printStackTrace();
         }
     }
 
     public void disable() {
-        if (!this.Offline && this.Login) {
-            this.Data.set("Player.Logoff", LocalTime.now().toString());
-            Vector position = PlayerObj.getLocation().toVector();
-            this.Data.set("Player.LogoffPosition", position);
-        }
-        Logger.Debug("Deletando uma instancia do Player data do player: " + ChatColor.GREEN + Name);
         this.save();
+        Logger.Debug("Deletando uma instancia do Player data do player: " + ChatColor.GREEN + playerName);
     }
 
     public void reload() {
-        Utils.createFolder("PlayerData");
-        if (this.DataFile == null) {
-            this.DataFile = new File(JMCore.getInstance().getDataFolder() + File.separator + "PlayerData", this.OfflineName + ".yml");
+        if (dataFile.exists()) {
+            try {
+                FileInputStream fis = new FileInputStream(dataFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                this.dataHashMap = (HashMap<String, Object>) ois.readObject();
+                ois.close();
+                fis.close();
+            } catch (IOException | ClassCastException | ClassNotFoundException e) {
+                Logger.Error("Falha ao recarregar playerdata de: " + playerName);
+                e.printStackTrace();
+            }
         }
-        this.Data = YamlConfiguration.loadConfiguration(DataFile);
-        this.Data.set("Player.name", Name);
-        this.Data.set("Player.offlineName", OfflineName);
-        if (!Offline) {
-            this.Data.set("Player.uuid", PlayerObj.getUniqueId().toString());
-            this.Data.set("Player.ip", PlayerObj.getAddress().toString());
-        }
-        this.save();
     }
 
-    public boolean IsOfflineData() {
-        return this.Offline;
+    public boolean isOfflineData() {
+        return this.offlineData;
     }
 
-    public YamlConfiguration getData() {
-        return this.Data;
+    @Nullable
+    public Player getPlayer() {
+        return Bukkit.getPlayer(playerName);
     }
 
-    public Player getPlayerObj() {
-        return this.PlayerObj;
+    @SuppressWarnings("deprecation")
+    public OfflinePlayer getOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(playerName);
     }
 
-    public OfflinePlayer getOfflinePlayerObj() {
-        return this.OfflinePlayerObj;
+    public LocalTime getOnTimeCache() {
+        return this.onTimeCache;
     }
 
-    public LocalTime getTime() {
-        return this.Time;
+    public void setOnTimeCache(LocalTime t) {
+        this.onTimeCache = t;
     }
 
-    public void setTime(LocalTime t) {
-        this.Time = t;
+    public Object getValue(String key) {
+        return dataHashMap.get(key);
+    }
+
+    public HashMap<String, Object> getData() {
+        return dataHashMap;
     }
 
 }
