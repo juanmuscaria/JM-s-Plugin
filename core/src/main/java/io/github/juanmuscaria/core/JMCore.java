@@ -10,6 +10,7 @@ import io.github.juanmuscaria.core.event.PlayerDataEvents;
 import io.github.juanmuscaria.core.task.OnlineTime;
 import io.github.juanmuscaria.core.utils.CommandRegister;
 import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.core.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -40,12 +41,13 @@ public class JMCore extends JavaPlugin {
         Logger.cLog(ChatColor.GREEN + "Iniciando....");
         Logger.cLog(ChatColor.GOLD + "---------------------------------------");
         instance = this;
+        Utils.createFolder("PlayerData");
         globalPluginConfig = new Config("config");
         globalPluginConfig.Reload();
         Config commandConfig = new Config("commands");
         commandConfig.Reload();
         //Registra os comandos
-        CommandRegister.register("jm", "jm.cmd.player.jm", new JM(), commandConfig, null);
+        CommandRegister.register("jm", "jm.cmd.player.jm", new JM(), commandConfig.Get(), this, null);
         APIs.loadAPIs();
 
         //Registra eventos e tals
@@ -62,8 +64,8 @@ public class JMCore extends JavaPlugin {
             tasks.add(new OnlineTime().runTaskTimerAsynchronously(this, 0L, 1000L));
         }
         for (Player p : getServer().getOnlinePlayers()) {
-            PlayerData data = new PlayerData(p.getName().toLowerCase(), false, true);
-            Logger.Warn(ChatColor.RED + "AVISO:Colocando uma instancia de um player data na inicialização. o plugin fara isso caso tenha player online na inicialização, mas poderá ocorrer erros inesperados, por favor reinicie seu servidor se possivel.");
+            PlayerData data = new PlayerData(p.getName().toLowerCase());
+            Logger.Warn(ChatColor.RED + "AVISO:Colocando uma instancia de um player data na inicialização, isso ainda não está 100% implementado e poderá causar bugs.");
             JMCore.getInstance().playerDataHashMap.put(p.getName().toLowerCase(), data);
         }
 

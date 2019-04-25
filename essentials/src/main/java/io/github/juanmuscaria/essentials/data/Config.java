@@ -1,7 +1,7 @@
-package io.github.juanmuscaria.core.data;
+package io.github.juanmuscaria.essentials.data;
 
-import io.github.juanmuscaria.core.JMCore;
 import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.essentials.JMEssentials;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -15,8 +15,9 @@ public class Config {
     private File File = null;
     private YamlConfiguration Config = null;
 
-    public Config(String config) {
-        this.config = config;
+    public Config(String pconfig) {
+        config = pconfig;
+        saveDefaultConfig();
         Reload();
     }
 
@@ -35,11 +36,11 @@ public class Config {
     @SuppressWarnings("ConstantConditions")
     public void Reload() {
         if (File == null) {
-            File = new File(JMCore.getInstance().getDataFolder(), config + ".yml");
+            File = new File(JMEssentials.getInstance().getDataFolder(), config + ".yml");
         }
         Config = YamlConfiguration.loadConfiguration(File);
 
-        Reader defConfigStream = new InputStreamReader(JMCore.getInstance().getResource(config + ".yml"), StandardCharsets.UTF_8);
+        Reader defConfigStream = new InputStreamReader(JMEssentials.getInstance().getResource(config + ".yml"), StandardCharsets.UTF_8);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             Config.setDefaults(defConfig);
@@ -56,6 +57,15 @@ public class Config {
         } catch (IOException ex) {
             Logger.Error("Não foi possivel salvar o arquivo de configuração:" + File.getPath());
             ex.printStackTrace();
+        }
+    }
+
+    public void saveDefaultConfig() {
+        if (File == null) {
+            File = new File(JMEssentials.getInstance().getDataFolder(), config + ".yml");
+        }
+        if (!File.exists()) {
+            JMEssentials.getInstance().saveResource(config + ".yml", false);
         }
     }
 }

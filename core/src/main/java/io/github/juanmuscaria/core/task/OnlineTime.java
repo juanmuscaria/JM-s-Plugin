@@ -17,15 +17,15 @@ public class OnlineTime extends BukkitRunnable {
             public void run() {
                 Logger.Debug("Executando ontime");
                 JMCore.getInstance().playerDataHashMap.forEach((key, value) -> {
-                    if (!value.IsOfflineData()) {
-                        if (LocalTime.now().isAfter(value.getTime().plusHours(1L))) {
+                    if (!value.isOfflineData()) {
+                        if (LocalTime.now().isAfter(value.getOnTimeCache().plusHours(1L))) {
                             try {
-                                value.setTime(LocalTime.now());
+                                value.setOnTimeCache(LocalTime.now());
                                 YamlConfiguration con = JMCore.globalPluginConfig.Get();
-                                String a = con.getString("ontime.command").replace("%player%", value.getPlayerObj().getName());
+                                String a = con.getString("ontime.command").replace("%player%", value.getPlayer().getName());
                                 Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), a);
                                 String b = con.getString("ontime.msg").replace('&', '§');
-                                value.getPlayerObj().sendMessage(b);
+                                value.getPlayer().sendMessage(b);
                             } catch (Exception ex) {
                                 Logger.Error(ex.getMessage());
                                 ex.printStackTrace();
