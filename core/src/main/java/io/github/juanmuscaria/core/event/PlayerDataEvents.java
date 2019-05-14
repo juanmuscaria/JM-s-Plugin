@@ -16,25 +16,19 @@ public class PlayerDataEvents implements Listener, IEvent {
         Logger.Debug("Evento " + ChatColor.RED + "PlayerDataEvents" + ChatColor.WHITE + " foi registrado.");
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
-        PlayerData data = new PlayerData(event.getPlayer().getName().toLowerCase(), false, true);
+        PlayerData data = new PlayerData(event.getPlayer().getName().toLowerCase());
         Logger.Debug("Colocando instancia no hashmap");
         JMCore.getInstance().playerDataHashMap.put(event.getPlayer().getName().toLowerCase(), data);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         String player = event.getPlayer().getName();
         Logger.Debug("Tirando instancia do hashmap!");
-        try {
-            JMCore.getInstance().playerDataHashMap.get(event.getPlayer().getName().toLowerCase()).disable();
-            JMCore.getInstance().playerDataHashMap.remove(event.getPlayer().getName().toLowerCase());
-        } catch (NullPointerException e) {
-            //TODO: Fazer algo caso ocorra esse erro
-            Logger.Error("Ocorreu um erro ao tentar tirar uma instancia do hashmap");
-            e.printStackTrace();
-        }
+        JMCore.getInstance().playerDataHashMap.get(event.getPlayer().getName().toLowerCase()).disable();
+        JMCore.getInstance().playerDataHashMap.remove(event.getPlayer().getName().toLowerCase());
 
     }
 

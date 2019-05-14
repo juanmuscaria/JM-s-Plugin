@@ -27,6 +27,7 @@ public class PlayerData implements IReload {
         this.dataFile = new File(JMCore.getInstance().getDataFolder() + File.separator + "PlayerData", this.playerName + ".ser");
         if (offlineData) {
             load();
+            this.onTimeCache = LocalTime.now();
         } else {
             load();
             dataHashMap.put("player.ip", Bukkit.getPlayer(player).getAddress().getHostString());

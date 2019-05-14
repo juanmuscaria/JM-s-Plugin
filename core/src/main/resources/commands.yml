@@ -1,0 +1,8 @@
+commands:
+  jm:
+    enable: true
+    aliases:
+      - juanmuscaria
+      - jmplugin
+    description: Comando principal.
+    permissionmessage: '&cVocê não tem permissão para utilizar este comando.'

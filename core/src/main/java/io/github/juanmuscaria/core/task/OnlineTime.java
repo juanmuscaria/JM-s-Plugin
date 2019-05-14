@@ -1,12 +1,13 @@
 package io.github.juanmuscaria.core.task;
 
 import io.github.juanmuscaria.core.JMCore;
+import io.github.juanmuscaria.core.data.PluginConfig;
 import io.github.juanmuscaria.core.utils.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 
 //TODO:(re)Fazer os premios baseados no ontime(incompleto).
 public class OnlineTime extends BukkitRunnable {
@@ -21,17 +22,17 @@ public class OnlineTime extends BukkitRunnable {
                         if (LocalTime.now().isAfter(value.getOnTimeCache().plusHours(1L))) {
                             try {
                                 value.setOnTimeCache(LocalTime.now());
-                                YamlConfiguration con = JMCore.globalPluginConfig.Get();
-                                String a = con.getString("ontime.command").replace("%player%", value.getPlayer().getName());
+
+                                String a = PluginConfig.pluginConfig.ontime_command.replace("%player%", value.getPlayer().getName());
                                 Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), a);
-                                String b = con.getString("ontime.msg").replace('&', '§');
+                                String b = PluginConfig.pluginConfig.ontime_msg.replace('&', '§');
                                 value.getPlayer().sendMessage(b);
                             } catch (Exception ex) {
                                 Logger.Error(ex.getMessage());
                                 ex.printStackTrace();
                             }
                         } else {
-                            Logger.Error("Foi encontrado um player offline na lista de jogadores online, isso poderá gerar erros graves no futuro.");
+                            Logger.Error(Arrays.asList("Foi encontrado um player offline na lista de jogadores online, isso poderá gerar erros graves no futuro.", value.getOfflinePlayer().getName()));
                         }
                     }
                 });

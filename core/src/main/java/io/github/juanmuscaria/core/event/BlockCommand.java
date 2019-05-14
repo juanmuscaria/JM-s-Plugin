@@ -1,9 +1,9 @@
 package io.github.juanmuscaria.core.event;
 
 import io.github.juanmuscaria.core.JMCore;
+import io.github.juanmuscaria.core.data.PluginConfig;
 import io.github.juanmuscaria.core.utils.Logger;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,11 +39,10 @@ public class BlockCommand implements Listener, IEvent {
                         "preaquecido, por aproximadamente 40 minutos ou ao furar o bolo com um garfo, este saia limpo");
                 event.setCancelled(true);
             }
-        YamlConfiguration config = JMCore.globalPluginConfig.Get();
 
-        for (String str : config.getStringList("blockedcmds.cmdlist"))
+        for (String str : PluginConfig.pluginConfig.blockedcmds_cmdlist)
             if (event.getMessage().toLowerCase().startsWith(str) || event.getMessage().equalsIgnoreCase(str)) {
-                event.getPlayer().sendMessage(config.getString("blockedcmds.msg").replace('&', '§'));
+                event.getPlayer().sendMessage(PluginConfig.pluginConfig.blockedcmds_msg.replace('&', '§'));
                 event.setCancelled(true);
             }
 
@@ -56,6 +55,6 @@ public class BlockCommand implements Listener, IEvent {
     public void disable() {/* Esse evento n precisa disso.*/}
 
     @Override
-    public void save() {/* Esse evento n precisa disso*/}
+    public void save() {/* Esse evento n precisa disso.*/}
 
 }

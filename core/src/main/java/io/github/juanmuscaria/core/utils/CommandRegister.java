@@ -25,7 +25,7 @@ public class CommandRegister {
             Logger.Debug("Registrando o comando: " + ChatColor.GREEN + command);
             List<String> aliases = config.getStringList("commands." + command + ".aliases");
             String description = config.getString("commands." + command + ".description");
-            String permissionMessage = config.getString("commands" + command + ".permissionmessage").replace('&', '§');
+            String permissionMessage = config.getString("commands." + command + ".permissionmessage").replace('&', '§');
             PluginCommand pluginCommand = createPluginCommand(command, aliases, permission, permissionMessage, description, commandExecutor, plugin, tabCompleter);
             registerPluginCommand(pluginCommand, plugin);
         }

@@ -10,12 +10,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
-public class Config {
+//Usado somente pelo CommandRegister.
+public class OldConfig {
     private String config;
     private File File = null;
     private YamlConfiguration Config = null;
 
-    public Config(String pconfig) {
+    public OldConfig(String pconfig) {
         config = pconfig;
         saveDefaultConfig();
         Reload();
@@ -29,7 +30,7 @@ public class Config {
 
     }
 
-    public File GetFile() {
+    public File getFile() {
         return File;
     }
 
@@ -45,10 +46,10 @@ public class Config {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             Config.setDefaults(defConfig);
         }
-        Save();
+        save();
     }
 
-    public void Save() {
+    public void save() {
         if (Config == null || File == null) {
             return;
         }

@@ -1,8 +1,9 @@
-package io.github.juanmuscaria.core.utils;
+package io.github.juanmuscaria.essentials.utils;
 
 import io.github.juanmuscaria.core.data.PluginConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,13 +13,13 @@ public class Logger {
 
     //Log com cores + o prefix :P
     public static void cLog(String text) {
-        CCS.sendMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "JMCore" + ChatColor.AQUA + "]" + ChatColor.WHITE + text);
+        CCS.sendMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "JMEssentials" + ChatColor.AQUA + "]" + ChatColor.WHITE + text);
     }
 
     //debug
     public static void Debug(String text) {
         if (PluginConfig.pluginConfig.debug)
-            CCS.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "JMCore" + ChatColor.DARK_AQUA + "]" + ChatColor.WHITE + text);
+            CCS.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "JMEssentials" + ChatColor.DARK_AQUA + "]" + ChatColor.WHITE + text);
     }
 
     //Log normal.
@@ -31,7 +32,7 @@ public class Logger {
         Warn(a);
     }
 
-    public static void Warn(List<String> text) {
+    public static void Warn(@NotNull List<String> text) {
         cLog(ChatColor.GOLD + "AVISO:");
         text.forEach((txt -> cLog(ChatColor.GOLD + txt)));
     }
@@ -41,7 +42,7 @@ public class Logger {
         Error(a);
     }
 
-    public static void Error(List<String> text) {
+    public static void Error(@NotNull List<String> text) {
         cLog(ChatColor.GOLD + "---------------------------------------");
         cLog(ChatColor.RED + "Woops, algo de errado aconteceu @.@");
         text.forEach((txt -> cLog(ChatColor.RED + txt)));
@@ -53,7 +54,7 @@ public class Logger {
         Fatal(a);
     }
 
-    public static void Fatal(List<String> text) {
+    public static void Fatal(@NotNull List<String> text) {
         cLog(ChatColor.GOLD + "---------------------------------------");
         cLog(ChatColor.RED + "Woops, um erro FATAL aconteceu @.@");
         text.forEach((txt -> cLog(ChatColor.RED + txt)));

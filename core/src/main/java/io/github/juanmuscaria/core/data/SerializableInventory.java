@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ public class SerializableInventory implements Serializable {
     private int size;
     private String name;
 
-    public SerializableInventory(Inventory inventory) {
+    public SerializableInventory(@NotNull Inventory inventory) {
         this.size = inventory.getSize();
         this.itemStacks = new SerializableItemStack[size];
         this.name = inventory.getName();

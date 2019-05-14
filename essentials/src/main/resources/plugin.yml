@@ -4,6 +4,7 @@ description: ${description}
 load: STARTUP
 author: juanmuscaria
 website: https://juanmuscaria.github.io
-main: io.github.juanmuscaria.jmplugin.essentials.JMEssentials
+main: io.github.juanmuscaria.essentials.JMEssentials
 depend:
   - jmcore
+  - Yamler
