@@ -1,19 +1,18 @@
 package io.github.juanmuscaria.core.utils;
 
 import io.github.juanmuscaria.core.JMCore;
+import net.minecraft.server.v1_7_R4.NBTCompressedStreamTools;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import static io.github.juanmuscaria.core.utils.NMS.getNMSClass;
-import static io.github.juanmuscaria.core.utils.NMS.getOBClass;
 
 
 public class Utils {
@@ -55,13 +54,10 @@ public class Utils {
 
         ItemStack itemStack = null;
         try {
-            Class<?> nbtTagCompoundClass = getNMSClass("NBTTagCompound");
-            Class<?> nmsItemStackClass = getNMSClass("ItemStack");
-            Object nbtTagCompound = getNMSClass("NBTCompressedStreamTools").getMethod("a", DataInputStream.class).invoke(null, dataInputStream);
-            //Object nbtTagCompound = getNMSClass("NBTCompressedStreamTools").getMethod("a", DataInputStream.class).invoke(null, inputStream);
-            Object craftItemStack = nmsItemStackClass.getMethod("createStack", nbtTagCompoundClass).invoke(null, nbtTagCompound);
-            itemStack = (ItemStack) getOBClass("inventory.CraftItemStack").getMethod("asBukkitCopy", nmsItemStackClass).invoke(null, craftItemStack);
-        } catch (ReflectiveOperationException e) {
+            NBTTagCompound nbtTagCompound = NBTCompressedStreamTools.a(dataInputStream);
+            net.minecraft.server.v1_7_R4.ItemStack craftItemStack = net.minecraft.server.v1_7_R4.ItemStack.createStack(nbtTagCompound);
+            itemStack = CraftItemStack.asBukkitCopy(craftItemStack);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (itemStack == null) {
@@ -82,14 +78,12 @@ public class Utils {
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
 
         try {
-            Class<?> nbtTagCompoundClass = getNMSClass("NBTTagCompound");
-            Constructor<?> nbtTagCompoundConstructor = nbtTagCompoundClass.getConstructor();
-            Object nbtTagCompound = nbtTagCompoundConstructor.newInstance();
-            Object nmsItemStack = getOBClass("inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
-            getNMSClass("ItemStack").getMethod("save", nbtTagCompoundClass).invoke(nmsItemStack, nbtTagCompound);
-            getNMSClass("NBTCompressedStreamTools").getMethod("a", nbtTagCompoundClass, DataOutput.class).invoke(null, nbtTagCompound, dataOutput);
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            net.minecraft.server.v1_7_R4.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
+            nmsItemStack.save(nbtTagCompound);
+            NBTCompressedStreamTools.a(nbtTagCompound, (DataOutput) dataOutput);
 
-        } catch (ReflectiveOperationException e) {
+        } catch (NullPointerException e) {
             Logger.Error("Occoreu um erro ao tentar serializar uma item stack!");
             e.printStackTrace();
         }

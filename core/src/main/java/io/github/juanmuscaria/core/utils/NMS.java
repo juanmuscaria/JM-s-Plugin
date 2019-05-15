@@ -2,7 +2,6 @@ package io.github.juanmuscaria.core.utils;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
-
 public class NMS {
     /**
      * Uma função para pegar a versão do NMS do servidor!
@@ -11,6 +10,7 @@ public class NMS {
      */
     public static String getVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+
     }
 
     /**
@@ -21,9 +21,8 @@ public class NMS {
      */
     @Nullable
     public static Class<?> getNMSClass(String name) {
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         try {
-            return Class.forName("net.minecraft.server." + version + "." + name);
+            return Class.forName("net.minecraft.server." + getVersion() + "." + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -38,9 +37,8 @@ public class NMS {
      */
     @Nullable
     public static Class<?> getOBClass(String name) {
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         try {
-            return Class.forName("org.bukkit.craftbukkit." + version + "." + name);
+            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
