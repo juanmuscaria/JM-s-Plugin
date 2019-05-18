@@ -2,6 +2,7 @@ package io.github.juanmuscaria.core.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 
 enum Colors {
@@ -52,6 +53,10 @@ public class JSONChat {
 
     public void addText(JsonObject text) {
         jsonObject.getAsJsonArray("extra").add(text);
+    }
+
+    public void sendTo(Player p) {
+
     }
 }
 

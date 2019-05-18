@@ -12,6 +12,7 @@ import io.github.juanmuscaria.core.task.OnlineTime;
 import io.github.juanmuscaria.core.utils.CommandRegister;
 import io.github.juanmuscaria.core.utils.Logger;
 import io.github.juanmuscaria.core.utils.Utils;
+import io.github.juanmuscaria.core.utils.nms.NMSUtil;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -92,6 +93,7 @@ public class JMCore extends JavaPlugin {
         commandConfig.Reload();
         CommandRegister.register("jm", "jm.cmd.player.jm", new JM(), commandConfig.Get(), this, null); //Registra o comando /jm.
         APIs.loadAPIs();
+        NMSUtil.init();
 
         eventos.add(new PlayerDataEvents()); //Evento essencial para manipular os dados dos jogadores.
         if ((!(APIs.protocolManager == null)) && PluginConfig.pluginConfig.blocktab_enable) //Verifica se o protocollib stá instalado e se está ativado para registrar o evento.

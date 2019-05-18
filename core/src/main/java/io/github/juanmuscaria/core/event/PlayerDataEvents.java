@@ -18,7 +18,7 @@ public class PlayerDataEvents implements Listener, IEvent {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
-        PlayerData data = new PlayerData(event.getPlayer().getName().toLowerCase());
+        PlayerData data = new PlayerData(event.getPlayer().getName().toLowerCase(), event.getPlayer());
         Logger.Debug("Colocando instancia no hashmap");
         JMCore.getInstance().playerDataHashMap.put(event.getPlayer().getName().toLowerCase(), data);
     }

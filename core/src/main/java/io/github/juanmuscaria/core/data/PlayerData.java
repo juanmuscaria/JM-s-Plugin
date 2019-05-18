@@ -6,24 +6,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.io.*;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class PlayerData implements IReload {
+    private static List<IPlayerDataHandler> handlers = new ArrayList<>();
     private Boolean offlineData = false;
     private String playerName;
     private File dataFile;
     private LocalTime onTimeCache;
     private HashMap<String, Object> dataHashMap;
 
-    public PlayerData(String player) {
+    public PlayerData(String player, Player playerObj) {
         Logger.Debug("Criando uma nova instancia do PlayerData para o player: " + ChatColor.GREEN + player);
         this.playerName = player;
-        if (Bukkit.getPlayer(player) == null) offlineData = true;
+        if (playerObj == null) offlineData = true;
         this.dataFile = new File(JMCore.getInstance().getDataFolder() + File.separator + "PlayerData", this.playerName + ".ser");
         if (offlineData) {
             load();
@@ -34,9 +37,21 @@ public class PlayerData implements IReload {
             dataHashMap.put("player.uuid", Bukkit.getPlayer(player).getUniqueId());
             this.onTimeCache = LocalTime.now();
             dataHashMap.computeIfAbsent("player.firstlogin", k -> onTimeCache);
+
         }
+        handlers.forEach((H) -> {
+            if (!(H == null)) H.onEnable(this);
+        });
 
         Logger.Debug("Instancia criada!");
+    }
+
+    public static void addHandler(IPlayerDataHandler handler) {
+        handlers.add(handler);
+    }
+
+    public static void removeHandler(IPlayerDataHandler handler) {
+        handlers.remove(handler);
     }
 
     private void load() {
@@ -62,6 +77,9 @@ public class PlayerData implements IReload {
     public void save() {
         Logger.Debug("Salvando Player data do player: " + ChatColor.GREEN + playerName);
         try {
+            handlers.forEach((H) -> {
+                if (!(H == null)) H.onSave(this);
+            });
             FileOutputStream fos = new FileOutputStream(this.dataFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(this.dataHashMap);
@@ -74,6 +92,10 @@ public class PlayerData implements IReload {
     }
 
     public void disable() {
+
+        handlers.forEach((H) -> {
+            if (!(H == null)) H.onDisable(this);
+        });
         this.save();
         Logger.Debug("Deletando uma instancia do Player data do player: " + ChatColor.GREEN + playerName);
     }
@@ -97,7 +119,7 @@ public class PlayerData implements IReload {
         return this.offlineData;
     }
 
-    @Nullable
+    @Contract
     public Player getPlayer() {
         return Bukkit.getPlayer(playerName);
     }
@@ -122,5 +144,4 @@ public class PlayerData implements IReload {
     public HashMap<String, Object> getData() {
         return dataHashMap;
     }
-
 }

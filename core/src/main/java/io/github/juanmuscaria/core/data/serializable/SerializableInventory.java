@@ -1,4 +1,4 @@
-package io.github.juanmuscaria.core.data;
+package io.github.juanmuscaria.core.data.serializable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;

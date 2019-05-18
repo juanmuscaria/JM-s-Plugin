@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import fr.neatmonster.nocheatplus.NCPAPIProvider;
 import fr.neatmonster.nocheatplus.components.NoCheatPlusAPI;
 import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.core.utils.Utils;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -19,13 +20,14 @@ public class APIs {
     @Nullable
     public static ProtocolManager protocolManager;
     @Nullable
-    public static Permission PermissionAPI = null;
+    public static Permission PermissionAPI;
     @Nullable
-    public static Economy EconomyAPI = null;
+    public static Economy EconomyAPI;
     @Nullable
-    public static Chat ChatAPI = null;
+    public static Chat ChatAPI;
+    public static Boolean isThermos = false;
 
-    public static void loadAPIs() {
+    static void loadAPIs() {
         Logger.Debug("Tentando carregar APIs");
 
         //TODO:Fazer o fix do ncp com o forge.
@@ -42,7 +44,6 @@ public class APIs {
             protocolManager = null;
             Logger.cLog(ChatColor.RED + "Não foi possivel iniciar a api do ProtocolLib");
         }
-
         try {
             RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
             PermissionAPI = permissionProvider.getProvider();
@@ -50,9 +51,11 @@ public class APIs {
             ChatAPI = chatProvider.getProvider();
             RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         } catch (NoClassDefFoundError ignore) {
-
         }
 
-
+        if (Utils.doesClassExist("thermos.Thermos") || Utils.doesClassExist("net.minecraftforge.caudron.CaudronUtils") || Utils.doesClassExist("net.minecraftforge.common.ForgeHooks")) {
+            isThermos = true;
+            Logger.Log("Forge detectado!");
+        }
     }
 }
