@@ -21,49 +21,72 @@ public class Home implements CommandExecutor {
     @Override
     @SuppressWarnings("unchecked")
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player) && !args[0].equalsIgnoreCase("homes") && args.length < 2) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Você precisa ser um jogador para executar esse comando.");
             return true;
         }
+        Player p = (Player) sender;
+        if (args.length == 0){
+            sendHelpMenssage(p,label);
+            return true;
+        }
+        PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
+        HashMap<String, io.github.juanmuscaria.essentials.data.Home> homes = (HashMap<String, io.github.juanmuscaria.essentials.data.Home>) data.getData().get("homes");
+
         switch (args[0].toLowerCase()) {
             case "homes": {
                 if (args.length == 1) {
-                    Player p = (Player) sender;
-                    PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
-                    HashMap<String, io.github.juanmuscaria.essentials.data.Home> homes = (HashMap<String, io.github.juanmuscaria.essentials.data.Home>) data.getData().get("homes");
-
-                    p.sendMessage("Lista de homes:\n");
-                    JSONChat msg = new JSONChat();
-                    Text arrow = new Text("  >", Colors.Blue);
+                    p.sendMessage(ChatColor.GRAY + "Lista de homes:\n");
+                    Text arrow = new Text(" >>", Colors.BrightGreen);
                     arrow.setBold(true);
                     homes.forEach((K, V) -> {
-                        msg.addText(arrow);
-                        Text home = new Text(K + "\n");
+                        JSONChat msg = new JSONChat();
+                        Text home = new Text(K).setClickEvent(new Event("run_command", "/home tp " + K).toJson()).setHoverEvent(new Event("show_text","Local:"+V.getLocation().toLocation()+" É pública:" + (V.getPublic() ? "sim." : "não.")).toJson()+);
                         if (V.getPublic()) home.setColor(Colors.Red);
                         else home.setColor(Colors.Blue);
-                        Event commandEvent = new Event("run_command", "/home tp " + K);
-                        home.setClickEvent(commandEvent.toJson());
-                        msg.addText(home);
+                        msg.addText(arrow).addText(home).sendTo(p);
                     });
-                    Text end = new Text("Você pode clicar em uma home para se teleportar.", Colors.Gray);
-                    msg.addText(end);
-                    msg.sendTo(p);
+                    new JSONChat().addText( new Text(">Info<", Colors.Gray).setHoverEvent(new Event("show_text","Dica: Você pode clicar em uma home para teleportar-se.").toJson())).sendTo(p);
+                    break;
                 }
                 else {
+                    String target = args[1];
+                    try {
+
+                        PlayerData targetData = (Bukkit.getPlayer(target) == null) ? new PlayerData(target, null) : JMCore.getInstance().playerDataHashMap.get(target);
+
+                        HashMap<String, io.github.juanmuscaria.essentials.data.Home> targetHomes = (HashMap<String, io.github.juanmuscaria.essentials.data.Home>) data.getData().get("homes");
+
+                        p.sendMessage(ChatColor.GRAY + "Lista de homes:\n");
+                        targetHomes.forEach((K, V) -> {
+                            if (!isAdmin(p) && !V.getPublic()){}
+                            else {
+                                JSONChat msg = new JSONChat();
+                                Text home = new Text(K).setClickEvent(new Event("run_command", "/home tp " + K + " " + target).toJson()).setHoverEvent(new Event("show_text","Local:"+V.getLocation().toLocation()+" É pública:" + (V.getPublic() ? "sim." : "não.")).toJson()+);
+                                home.setColor(Colors.Blue);
+                                msg.addText(new Text(" >>", Colors.BrightGreen).setBold(true)).addText(home).sendTo(p);
+                            }
+
+                        });
+                        new JSONChat().addText( new Text(">Info<", Colors.Gray).setHoverEvent(new Event("show_text","Dica: Você pode clicar em uma home para teleportar-se.").toJson())).sendTo(p);
+                        if (targetData.isOfflineData())targetData.disable();
+                        }
+                        catch (Exception e) {
+                        p.sendMessage(ChatColor.RED + "Jogador não encontrado.");
+                        break;
+                    }
                 }
-                //Todo: Listar homes publicas de outros jogadores.
                 break;
             }
             case "set": {
-                Player p = (Player) sender;
                 if (args.length < 2) {
-                    p.sendMessage("Numero de argumentos invalido.");
+                    p.sendMessage("Número de argumentos invalido.");
                     sendHelpMenssage(p,label);
                     return true;
                 }
                 PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
                 HashMap<String, io.github.juanmuscaria.essentials.data.Home> homes = (HashMap<String, io.github.juanmuscaria.essentials.data.Home>) data.getData().get("homes");
-                if (Utils.getUserPermissionInteger("jm.homes",p) <= homes.size() ||!(p.hasPermission("jm.home.unlimited") || p.hasPermission("jm.admin.home"))) p.sendMessage(ChatColor.RED + "Limite de homes atingido! (" + homes.size() + "/" + Utils.getUserPermissionInteger("jm.homes",p) + ")");
+                if ((Utils.getUserPermissionInteger("jm.homes",p) <= homes.size()) && !(p.hasPermission("jm.home.unlimited") && )) p.sendMessage(ChatColor.RED + "Limite de homes atingido! (" + homes.size() + "/" + Utils.getUserPermissionInteger("jm.homes",p) + ")");
                 else {
                     if(Utils.validateStringForMap(args[1])){
                         SerializableLocation location = new SerializableLocation(p.getLocation());
@@ -85,6 +108,7 @@ public class Home implements CommandExecutor {
                     if(home == null)p.sendMessage(ChatColor.RED + "Home não encontrada.");
                     else {
                         home.doTeleport(p);
+                        break;
                     }
                 }
                 if (args.length > 2){
@@ -173,7 +197,11 @@ public class Home implements CommandExecutor {
                     sendHelpMenssage(p,label);
                 }
                 else {
-
+                    PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
+                    HashMap<String, io.github.juanmuscaria.essentials.data.Home> homes = (HashMap<String, io.github.juanmuscaria.essentials.data.Home>) data.getData().get("homes");
+                    io.github.juanmuscaria.essentials.data.Home home = homes.get(args[1]);
+                    if(home == null)p.sendMessage(ChatColor.RED + "Home não encontrada.");
+                    else home.setPublic(!home.getPublic());
                 }
                 break;
             }
@@ -188,34 +216,31 @@ public class Home implements CommandExecutor {
     }
 
     private void sendHelpMenssage(Player p,String command){
-        JSONChat msg = new JSONChat();
-        Text lines = new Text("----", Colors.Gray).setBold(true);
+
+        Text lines = new Text("------", Colors.Gray).setBold(true);
         Text name = new Text("Home", Colors.Blue).setHoverEvent(
                 new Event("show_text","Módulo homes do JMEssentials by:juanmuscaria.").toJson());
-        msg.addText(lines).addText(name).addText(lines).addText(new Text("\n"));
-        msg.addText(new Text("Lista de comandos [Opcional] <Obrigatório>:\n",Colors.White));
-        msg.addText(new Text("  >/"+command+" homes [jogador]",Colors.Cyan).setBold(true).setClickEvent(
-                new Event("suggest_command","/"+command+" homes [jogador]").toJson()));
-        msg.addText(new Text("\nLista as suas homes públicas e privadas. Caso for dado o nome de um jogador irá listar as homes publicas do mesmo.",Colors.Gray));
+        new JSONChat().addText(lines).addText(name).addText(lines).sendTo(p);
+        new JSONChat().addText(new Text("Lista de comandos [Opcional] <Obrigatório>:",Colors.White)).sendTo(p);
+        new JSONChat().addText(new Text("  >/"+command+" homes [jogador]",Colors.Cyan).setBold(true).setClickEvent(
+                new Event("suggest_command","/"+command+" homes [jogador]").toJson())).sendTo(p);
+        new JSONChat().addText(new Text("Lista as suas homes públicas e privadas. Caso for dado o nome de um jogador irá listar as homes publicas do mesmo.",Colors.Gray)).sendTo(p);
+        new JSONChat().addText(new Text("  >/"+command+" set <Nome>",Colors.Cyan).setBold(true).setClickEvent(
+                new Event("suggest_command","/"+command+" set <Nome>").toJson())).sendTo(p);
+        new JSONChat().addText(new Text("Define uma home no local que você está",Colors.Gray)).sendTo(p);
+        new JSONChat().addText(new Text("  >/"+command+" tp <Nome> [jogador]",Colors.Cyan).setBold(true).setClickEvent(
+                new Event("suggest_command","/"+command+" tp <Nome> [jogador]").toJson())).sendTo(p);
+        new JSONChat().addText(new Text("Teleporta para uma home.",Colors.Gray)).sendTo(p);
+        new JSONChat().addText(new Text("  >/"+command+" del <Nome> [jogador]",Colors.Cyan).setBold(true).setClickEvent(
+                new Event("suggest_command","/"+command+" del <Nome> [jogador]").toJson())).sendTo(p);
+        new JSONChat().addText(new Text("Deleta uma home.",Colors.Gray)).sendTo(p);
+        new JSONChat().addText(new Text("  >/"+command+" setpublic <Nome>",Colors.Cyan).setBold(true).setClickEvent(
+                new Event("suggest_command","/"+command+" setpublic <Nome>").toJson())).sendTo(p);
+        new JSONChat().addText(new Text("Permite deixar uma home publica ou privada.",Colors.Gray)).sendTo(p);
+        new JSONChat().addText(lines).addText(name).addText(lines).sendTo(p);
+    }
 
-        msg.addText(new Text("  >/"+command+" set <Nome>",Colors.Cyan).setBold(true).setClickEvent(
-                new Event("suggest_command","/"+command+" set <Nome>").toJson()));
-        msg.addText(new Text("\nDefine uma home no local que você está",Colors.Gray));
-
-        msg.addText(new Text("  >/"+command+" tp <Nome> [jogador]",Colors.Cyan).setBold(true).setClickEvent(
-                new Event("suggest_command","/"+command+" tp <Nome> [jogador]").toJson()));
-        msg.addText(new Text("\nTeleporta para uma home.",Colors.Gray));
-
-        msg.addText(new Text("  >/"+command+" del <Nome> [jogador]",Colors.Cyan).setBold(true).setClickEvent(
-                new Event("suggest_command","/"+command+" del <Nome> [jogador]").toJson()));
-        msg.addText(new Text("\nDeleta uma home.",Colors.Gray));
-
-        msg.addText(new Text("  >/"+command+" setpublic <Nome>",Colors.Cyan).setBold(true).setClickEvent(
-                new Event("suggest_command","/"+command+" setpublic <Nome>").toJson()));
-        msg.addText(new Text("\nPermite deixar uma home publica ou privada.",Colors.Gray));
-
-        msg.addText(lines).addText(name).addText(lines).addText(new Text("\n"));
-        msg.sendTo(p);
+    private Boolean isAdmin(Player p){
+        return p.hasPermission("jm.admin.home") || p.isOp();
     }
 }
-
