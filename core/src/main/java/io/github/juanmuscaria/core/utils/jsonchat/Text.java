@@ -1,66 +1,8 @@
-package io.github.juanmuscaria.core.utils;
+package io.github.juanmuscaria.core.utils.jsonchat;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Contract;
 
-enum Colors {
-    Black("black"),
-    DarkBlue("dark_blue"),
-    DarkGreen("dark_green"),
-    DarkCyan("dark_aqua"),
-    DarkRed("dark_red"),
-    Purple("dark_purple"),
-    Gold("gold"),
-    Gray("gray"),
-    DarkGray("dark_gray"),
-    Blue("blue"),
-    BrightGreen("green"),
-    Cyan("aqua"),
-    Red("red"),
-    Pink("light_purple"),
-    Yellow("yellow"),
-    White("white"),
-    @Deprecated Random("obfuscated"),
-    @Deprecated Bold("bold"),
-    @Deprecated Strikethrough("strikethrough"),
-    @Deprecated Underlined("underline"),
-    @Deprecated Italic("italic"),
-    Reset("reset");
-
-    private final String name;
-
-    Colors(final String name) {
-        this.name = name;
-    }
-
-    @Contract(pure = true)
-    @Override
-    public String toString() {
-        return name;
-    }
-}
-
-public class JSONChat {
-    private JsonObject jsonObject = new JsonObject();
-
-    public JSONChat() {
-        jsonObject.addProperty("text", "");
-        JsonArray text = new JsonArray();
-        jsonObject.add("extra", text);
-    }
-
-    public void addText(JsonObject text) {
-        jsonObject.getAsJsonArray("extra").add(text);
-    }
-
-    public void sendTo(Player p) {
-
-    }
-}
-
-class Text {
+public class Text {
 
     private Boolean bold = false;
     private Boolean italic = false;
@@ -112,97 +54,80 @@ class Text {
         return bold;
     }
 
-    public void setBold(Boolean bold) {
+    public Text setBold(Boolean bold) {
         this.bold = bold;
+        return this;
     }
 
     public Boolean getItalic() {
         return italic;
     }
 
-    public void setItalic(Boolean italic) {
+    public Text setItalic(Boolean italic) {
         this.italic = italic;
+        return this;
     }
 
     public Boolean getUnderlined() {
         return underlined;
     }
 
-    public void setUnderlined(Boolean underlined) {
+    public Text setUnderlined(Boolean underlined) {
         this.underlined = underlined;
+        return this;
     }
 
     public Boolean getStrikethrough() {
         return strikethrough;
     }
 
-    public void setStrikethrough(Boolean strikethrough) {
+    public Text setStrikethrough(Boolean strikethrough) {
         this.strikethrough = strikethrough;
+        return this;
     }
 
     public Boolean getObfuscated() {
         return obfuscated;
     }
 
-    public void setObfuscated(Boolean obfuscated) {
+    public Text setObfuscated(Boolean obfuscated) {
         this.obfuscated = obfuscated;
+        return this;
     }
 
     public Colors getColor() {
         return color;
     }
 
-    public void setColor(Colors color) {
+    public Text setColor(Colors color) {
         this.color = color;
+        return this;
     }
 
     public JsonObject getClickEvent() {
         return clickEvent;
     }
 
-    public void setClickEvent(JsonObject clickEvent) {
+    public Text setClickEvent(JsonObject clickEvent) {
         this.clickEvent = clickEvent;
+        return this;
     }
 
     public JsonObject getHoverEvent() {
         return hoverEvent;
     }
 
-    public void setHoverEvent(JsonObject hoverEvent) {
+    public Text setHoverEvent(JsonObject hoverEvent) {
         this.hoverEvent = hoverEvent;
+        return this;
     }
 
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public Text setText(String text) {
         this.text = text;
-    }
-}
-
-class Event {
-    private String action = "";
-    private JsonObject value = new JsonObject();
-    private String valueString = "";
-    private Boolean asString = false;
-
-    public Event(String action, String value) {
-        this.action = action;
-        this.valueString = value;
-        this.asString = true;
-    }
-
-    public Event(String action, JsonObject value) {
-        this.action = action;
-        this.value = value;
-    }
-
-    public JsonObject toJson() {
-        JsonObject json = new JsonObject();
-        json.addProperty("action", action);
-        if (asString) json.addProperty("value", valueString);
-        else json.add("value", value);
-        return json;
+        return this;
     }
 }

@@ -18,13 +18,11 @@ public class SerializableItemStack implements Serializable {
     }
 
     public ItemStack getItemStack() {
-        if (itemStack.isEmpty()) return null;
-        else return NMSUtil.nmsUtil.deserializeItemStack(itemStack);
+        return NMSUtil.nmsUtil.deserializeItemStack(itemStack);
     }
 
     public void setItemStack(ItemStack stack) {
-        if (stack == null) itemStack = "";
-        else this.itemStack = NMSUtil.nmsUtil.serializeItemStack(stack);
+        this.itemStack = NMSUtil.nmsUtil.serializeItemStack(stack);
     }
 
     @Override

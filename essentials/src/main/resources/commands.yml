@@ -20,3 +20,10 @@ commands:
       - amigos
     description: "Permite gerenciar os amigos do cofh core"
     permissionmessage: '&cVocê não tem permissão para utilizar este comando.'
+  home:
+    enable: true
+    aliases:
+      - homes
+      - sethome
+    description: "Permite gerenciar os amigos do cofh core"
+    permissionmessage: '&cVocê não tem permissão para utilizar este comando.'

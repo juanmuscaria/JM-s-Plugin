@@ -18,7 +18,7 @@ public class SerializableInventory implements Serializable {
         this.size = inventory.getSize();
         this.itemStacks = new SerializableItemStack[size];
         this.name = inventory.getName();
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             itemStacks[i] = new SerializableItemStack(inventory.getItem(i));
         }
     }
@@ -37,9 +37,10 @@ public class SerializableInventory implements Serializable {
 
     public Inventory generateInventory(@Nullable InventoryHolder owner) {
         Inventory inventory = Bukkit.createInventory(owner, this.size, this.name);
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             inventory.setItem(i, itemStacks[i].getItemStack());
         }
         return inventory;
     }
+
 }

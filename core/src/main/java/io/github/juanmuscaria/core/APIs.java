@@ -55,7 +55,7 @@ public class APIs {
 
         if (Utils.doesClassExist("thermos.Thermos") || Utils.doesClassExist("net.minecraftforge.caudron.CaudronUtils") || Utils.doesClassExist("net.minecraftforge.common.ForgeHooks")) {
             isThermos = true;
-            Logger.Log("Forge detectado!");
+            Logger.cLog("Forge detectado!");
         }
     }
 }

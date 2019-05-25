@@ -1,8 +1,10 @@
 package io.github.juanmuscaria.core.utils.nms;
 
+import com.google.gson.JsonObject;
 import io.github.juanmuscaria.core.utils.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -60,5 +62,10 @@ public class NMSUtil_Reflection extends NMSUtil {
         }
 
         return new BigInteger(1, outputStream.toByteArray()).toString(32);
+    }
+
+    @Override
+    public void sendJsonChat(JsonObject chatObj, Player player) {
+
     }
 }

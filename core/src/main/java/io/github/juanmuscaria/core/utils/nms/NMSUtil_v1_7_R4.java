@@ -1,13 +1,19 @@
 package io.github.juanmuscaria.core.utils.nms;
 
+import com.google.gson.JsonObject;
 import io.github.juanmuscaria.core.utils.Logger;
+import net.minecraft.server.v1_7_R4.ChatSerializer;
 import net.minecraft.server.v1_7_R4.NBTCompressedStreamTools;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -18,6 +24,7 @@ public class NMSUtil_v1_7_R4 extends NMSUtil {
 
     @Override
     public ItemStack deserializeItemStack(String data) {
+        if (data.isEmpty()|| data.equals("AIR"))return null;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new BigInteger(data, 32).toByteArray());
         DataInputStream dataInputStream = new DataInputStream(inputStream);
 
@@ -41,11 +48,12 @@ public class NMSUtil_v1_7_R4 extends NMSUtil {
         }
     }
 
+    @NotNull
     @Override
     public String serializeItemStack(ItemStack item) {
+        if (item == null || item.isSimilar(new ItemStack(Material.AIR)))return "AIR";
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
-
         try {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
             net.minecraft.server.v1_7_R4.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
@@ -57,5 +65,10 @@ public class NMSUtil_v1_7_R4 extends NMSUtil {
             e.printStackTrace();
         }
         return new BigInteger(1, outputStream.toByteArray()).toString(32);
+    }
+
+    @Override
+    public void sendJsonChat(JsonObject chatObj, Player player) {
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(chatObj.toString()), true));
     }
 }

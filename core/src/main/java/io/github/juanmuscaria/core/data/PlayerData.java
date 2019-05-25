@@ -22,6 +22,7 @@ public class PlayerData implements IReload {
     private File dataFile;
     private LocalTime onTimeCache;
     private HashMap<String, Object> dataHashMap;
+    private Boolean isDisabled = false;
 
     public PlayerData(String player, Player playerObj) {
         Logger.Debug("Criando uma nova instancia do PlayerData para o player: " + ChatColor.GREEN + player);
@@ -97,6 +98,7 @@ public class PlayerData implements IReload {
             if (!(H == null)) H.onDisable(this);
         });
         this.save();
+        this.isDisabled = true;
         Logger.Debug("Deletando uma instancia do Player data do player: " + ChatColor.GREEN + playerName);
     }
 
@@ -112,6 +114,19 @@ public class PlayerData implements IReload {
                 Logger.Error("Falha ao recarregar playerdata de: " + playerName);
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    protected void finalize() {
+        try {
+            if (!isDisabled){
+                this.disable();
+                Logger.Warn("Um player data não foi finalizado corretamente e está sendo limpo pelo gc, salvando playerdata atual.");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 

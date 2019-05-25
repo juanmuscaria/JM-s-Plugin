@@ -58,4 +58,6 @@ public class PluginConfig extends YamlConfig {
     public void update(ConfigSection config) {
         //Pore enquanto não irei fazer um conversor de configurações antigas.
     }
+
+
 }

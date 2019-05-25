@@ -4,9 +4,11 @@ package io.github.juanmuscaria.essentials;
 import io.github.juanmuscaria.core.event.IEvent;
 import io.github.juanmuscaria.core.utils.CommandRegister;
 import io.github.juanmuscaria.essentials.comandos.Ajuda;
+import io.github.juanmuscaria.essentials.comandos.Home;
 import io.github.juanmuscaria.essentials.comandos.JMcofh;
 import io.github.juanmuscaria.essentials.comandos.Regras;
 import io.github.juanmuscaria.essentials.data.OldConfig;
+import io.github.juanmuscaria.essentials.data.PlayerDataHandler;
 import io.github.juanmuscaria.essentials.data.PluginConfig;
 import io.github.juanmuscaria.essentials.utils.Logger;
 import org.bukkit.ChatColor;
@@ -34,12 +36,14 @@ public class JMEssentials extends JavaPlugin {
         Logger.cLog(ChatColor.GREEN + "Iniciando....");
         Logger.cLog(ChatColor.GOLD + "---------------------------------------");
         instance = this;
+        new PlayerDataHandler();
         new PluginConfig(this);
         OldConfig commandConfig = new OldConfig("commands");
         commandConfig.Reload();
         CommandRegister.register("ajuda", "jm.cmd.player.ajuda", new Ajuda(), commandConfig.Get(), this, null);
         CommandRegister.register("regras", "jm.cmd.player.regras", new Regras(), commandConfig.Get(), this, null);
         CommandRegister.register("jmcofh", "jm.cmd.player.jmcofh", new JMcofh(), commandConfig.Get(), this, null);
+        CommandRegister.register("home","jm.cnd.player.home", new Home(), commandConfig.Get(),this,null);
     }
 
     @Override

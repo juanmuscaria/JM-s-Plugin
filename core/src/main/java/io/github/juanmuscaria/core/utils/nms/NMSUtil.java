@@ -1,8 +1,10 @@
 package io.github.juanmuscaria.core.utils.nms;
 
+import com.google.gson.JsonObject;
 import io.github.juanmuscaria.core.APIs;
 import io.github.juanmuscaria.core.utils.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,9 +64,10 @@ public abstract class NMSUtil {
         }
     }
 
-    @NotNull
     public abstract ItemStack deserializeItemStack(String data);
 
     @NotNull
     public abstract String serializeItemStack(ItemStack item);
+
+    public abstract void sendJsonChat(JsonObject chatObj, Player player);
 }
