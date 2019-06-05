@@ -12,7 +12,7 @@ public class PlayerDataHandler implements IPlayerDataHandler {
 
     @Override
     public void onEnable(PlayerData data) {
-        data.getData().computeIfAbsent("homes", K -> new HashMap<String, Home>());
+        data.getData().computeIfAbsent("homes", K -> new HashMap<String, HomeData>());
     }
 
     @Override

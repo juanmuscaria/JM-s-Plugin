@@ -1,6 +1,7 @@
 package io.github.juanmuscaria.essentials.data;
 
 import io.github.juanmuscaria.core.data.serializable.SerializableLocation;
+import io.github.juanmuscaria.core.utils.Utils;
 import io.github.juanmuscaria.essentials.JMEssentials;
 import io.github.juanmuscaria.essentials.utils.Logger;
 import org.bukkit.Bukkit;
@@ -14,12 +15,12 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Home implements Serializable {
+public class HomeData implements Serializable {
     private SerializableLocation location;
     private Boolean isPublic;
     private LocalTime cooldown;
 
-    public Home(SerializableLocation location, Boolean isPublic){
+    public HomeData(SerializableLocation location, Boolean isPublic){
         this.location = location;
         this.isPublic = isPublic;
         cooldown = LocalTime.now();
@@ -42,7 +43,7 @@ public class Home implements Serializable {
     }
 
     public void doTeleport(Player p){
-        if (LocalTime.now().isBefore(cooldown.plusSeconds(3))&& !p.isOp() && !p.hasPermission("jm.admin.home.bypasscooldown")){
+        if (LocalTime.now().isBefore(cooldown.plusSeconds(Utils.getUserPermissionInteger("jm.home.cooldown",p)))&& !p.isOp() && !p.hasPermission("jm.admin.home.bypasscooldown")){
             p.sendMessage(ChatColor.RED + "Espere 3 para poder teleportar-se para essa home novamente.");
             return;
         }
@@ -57,7 +58,7 @@ public class Home implements Serializable {
            }
        catch (Exception e){
            p.sendMessage(ChatColor.RED + "Não foi possivel teleportar para a home: " + location.getWorldName()+":"+location.toString());
-           Logger.Warn("O jogador " + p.getName() + " tentou ir para uma home invalida!\n" + "Home: " + location.getWorldName()+":"+location.toString());
+           Logger.Warn("O jogador " + p.getName() + " tentou ir para uma home invalida!\n" + "HomeData: " + location.getWorldName()+":"+location.toString());
            e.printStackTrace();
        }
    }

@@ -122,7 +122,8 @@ public class PlayerData implements IReload {
         try {
             if (!isDisabled){
                 this.disable();
-                Logger.Warn("Um player data não foi finalizado corretamente e está sendo limpo pelo gc, salvando playerdata atual.");
+                Logger.Warn("Um player data não foi finalizado corretamente e está sendo limpo pelo gc, salvando playerdata atual. Isso com certeza é um bug.");
+                new  Throwable().printStackTrace();
             }
         }
         catch (Exception e){
