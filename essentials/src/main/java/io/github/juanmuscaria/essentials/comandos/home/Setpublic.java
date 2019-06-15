@@ -27,7 +27,7 @@ public class Setpublic extends SubCommand {
         HashMap<String, HomeData> homes = (HashMap<String, HomeData>) data.getData().get("homes");
 
         HomeData homeData = homes.get(args[1]);
-        if(homeData == null)p.sendMessage(ChatColor.RED + "Home inexistente.");
+        if (homeData == null) p.sendMessage(ChatColor.RED + "Home inexistente.");
         else homeData.setPublic(!homeData.getPublic());
 
     }

@@ -1,19 +1,20 @@
-package io.github.juanmuscaria.core.event;
+package io.github.juanmuscaria.essentials.event;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import io.github.juanmuscaria.core.APIs;
-import io.github.juanmuscaria.core.JMCore;
-import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.core.event.IEvent;
+import io.github.juanmuscaria.essentials.JMEssentials;
+import io.github.juanmuscaria.essentials.utils.Logger;
 import org.bukkit.ChatColor;
 
 @SuppressWarnings("ConstantConditions")
 public class BlockTab extends PacketAdapter implements IEvent {
 
     public BlockTab() {
-        super(JMCore.getInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.TAB_COMPLETE);
+        super(JMEssentials.getInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.TAB_COMPLETE);
         APIs.protocolManager.addPacketListener(this);
         Logger.Debug("Evento " + ChatColor.RED + "BlockTab" + ChatColor.WHITE + " foi registrado.");
     }

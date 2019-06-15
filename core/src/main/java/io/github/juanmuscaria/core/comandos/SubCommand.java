@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class SubCommand {
-    private CommandExecutor mainCommand;
     protected String cmd;
+    private CommandExecutor mainCommand;
 
-    public SubCommand(CommandExecutor executor, String command){
+    public SubCommand(CommandExecutor executor, String command) {
         this.mainCommand = executor;
         this.cmd = command;
     }
@@ -19,15 +19,15 @@ public abstract class SubCommand {
 
     public abstract Boolean validateArguments(String[] args);
 
-    public Boolean valdateCommand(String command){
+    public Boolean valdateCommand(String command) {
         return cmd.equalsIgnoreCase(command);
     }
 
-    public void sendHelp(Player p, String command){
-        p.sendMessage(ChatColor.RED + "Comando incorreto, digite /"+command+" help para ajuda.");
+    public void sendHelp(Player p, String command) {
+        p.sendMessage(ChatColor.RED + "Comando incorreto, digite /" + command + " help para ajuda.");
     }
 
-    public CommandExecutor getMainCommand(){
+    public CommandExecutor getMainCommand() {
         return this.mainCommand;
     }
 }

@@ -1,8 +1,9 @@
-package io.github.juanmuscaria.core.event;
+package io.github.juanmuscaria.essentials.event;
 
-import io.github.juanmuscaria.core.JMCore;
-import io.github.juanmuscaria.core.data.PluginConfig;
-import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.core.event.IEvent;
+import io.github.juanmuscaria.essentials.JMEssentials;
+import io.github.juanmuscaria.essentials.data.PluginConfig;
+import io.github.juanmuscaria.essentials.utils.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +18,7 @@ public class BlockCommand implements Listener, IEvent {
     private final List<String> CmdPlugins = Arrays.asList("/plugins", "/pl", "/bukkit:plugins", "/bukkit:pl", "/bukkit:?", "/?");
 
     public BlockCommand() {
-        JMCore.getInstance().getServer().getPluginManager().registerEvents(this, JMCore.getInstance());
+        JMEssentials.getInstance().getServer().getPluginManager().registerEvents(this, JMEssentials.getInstance());
         Logger.Debug("Evento " + ChatColor.RED + "BlockCommand" + ChatColor.WHITE + " foi registrado.");
     }
 

@@ -27,16 +27,16 @@ public class Set extends SubCommand {
         PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
         HashMap<String, HomeData> homes = (HashMap<String, HomeData>) data.getData().get("homes");
 
-        if ((Utils.getUserPermissionInteger("jm.home.max",p) <= homes.size()) && !(p.hasPermission("jm.home.unlimited") || p.isOp())) p.sendMessage(ChatColor.RED + "Limite de homes atingido! (" + homes.size() + "/" + Utils.getUserPermissionInteger("jm.homes",p) + ")");
+        if ((Utils.getUserPermissionInteger("jm.home.max", p) <= homes.size()) && !(p.hasPermission("jm.home.unlimited") || p.isOp()))
+            p.sendMessage(ChatColor.RED + "Limite de homes atingido! (" + homes.size() + "/" + Utils.getUserPermissionInteger("jm.homes", p) + ")");
         else {
-            if(Utils.validateStringForMap(args[1])){
+            if (Utils.validateStringForMap(args[1])) {
                 SerializableLocation location = new SerializableLocation(p.getLocation());
-                HomeData homeData = new HomeData(location,false);
+                HomeData homeData = new HomeData(location, false);
                 homes.put(args[1], homeData);
                 data.save();
-                p.sendMessage(ChatColor.GREEN + "HomeData "+args[1]+ " definida com sucesso.");
-            }
-            else p.sendMessage(ChatColor.RED + "Só é permitido caracteres de aA-zZ!");
+                p.sendMessage(ChatColor.GREEN + "Home " + args[1] + " definida com sucesso.");
+            } else p.sendMessage(ChatColor.RED + "Só é permitido caracteres de aA-zZ!");
         }
     }
 

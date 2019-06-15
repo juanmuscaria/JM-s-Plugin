@@ -1,4 +1,6 @@
 package io.github.juanmuscaria.chunks;
 
-public class BCLRewrite {
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class BCLRewrite extends JavaPlugin {
 }

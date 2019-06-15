@@ -20,8 +20,8 @@ public class Cache<K, V> {
     /**
      * Constructs a Cache with the specified retention duration, in use function, and post-removal function.
      *
-     * @param retention duration after which keys are automatically invalidated if not in use
-     * @param inUseCheck Function used to check if a key is considered in use
+     * @param retention   duration after which keys are automatically invalidated if not in use
+     * @param inUseCheck  Function used to check if a key is considered in use
      * @param postRemoval Function used to perform any operations required when a key is invalidated
      */
     public Cache(final long retention, final Function<V> inUseCheck, final Function<V> postRemoval) {
@@ -49,7 +49,7 @@ public class Cache<K, V> {
      * Set a key and value pair. Keys are unique. Using an existing key will cause the old value to
      * be overwritten and the expiration timer to be reset.
      *
-     * @param key key with which the specified value is to be associated
+     * @param key   key with which the specified value is to be associated
      * @param value value to be associated with the specified key
      */
     public void put(final K key, final V value) {
@@ -111,7 +111,7 @@ public class Cache<K, V> {
             this.internal.remove(key);
 
             // Remove expiration entry - prevents more work later, plus prevents issues with values invalidating early
-            for (Iterator<Map.Entry<Long, K>> iterator = this.expiry.entries().iterator(); iterator.hasNext();) {
+            for (Iterator<Map.Entry<Long, K>> iterator = this.expiry.entries().iterator(); iterator.hasNext(); ) {
                 if (key.equals(iterator.next().getValue())) {
                     iterator.remove();
                     break;
@@ -142,7 +142,7 @@ public class Cache<K, V> {
         synchronized (this.internal) {
             List<K> inUse = new ArrayList<K>();
             for (Iterator<Map.Entry<Long, K>> iterator = this.expiry.entries().iterator(); iterator
-                    .hasNext();) {
+                    .hasNext(); ) {
                 Map.Entry<Long, K> entry = iterator.next();
 
                 if (entry.getKey() > now) {

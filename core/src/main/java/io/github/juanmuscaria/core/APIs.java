@@ -10,7 +10,6 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +25,8 @@ public class APIs {
     @Nullable
     public static Chat ChatAPI;
     public static Boolean isThermos = false;
+    public static Boolean hasJMEssentials = false;
+    public static Boolean hasJMChunks = false;
 
     static void loadAPIs() {
         Logger.Debug("Tentando carregar APIs");
@@ -34,15 +35,13 @@ public class APIs {
         try {
             ncpApi = NCPAPIProvider.getNoCheatPlusAPI();
         } catch (NoClassDefFoundError ignore) {
-            ncpApi = null;
-            Logger.cLog(ChatColor.RED + "Não foi possivel iniciar a api do NCP");
+            Logger.Warn("Não foi possivel iniciar a api do NCP");
         }
 
         try {
             protocolManager = ProtocolLibrary.getProtocolManager();
         } catch (NoClassDefFoundError ignore) {
-            protocolManager = null;
-            Logger.cLog(ChatColor.RED + "Não foi possivel iniciar a api do ProtocolLib");
+            Logger.Warn("Não foi possivel iniciar a api do ProtocolLib");
         }
         try {
             RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
@@ -51,6 +50,7 @@ public class APIs {
             ChatAPI = chatProvider.getProvider();
             RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         } catch (NoClassDefFoundError ignore) {
+            Logger.Warn("Não foi possivel iniciar os hooks do Vault.");
         }
 
         if (Utils.doesClassExist("thermos.Thermos") || Utils.doesClassExist("net.minecraftforge.caudron.CaudronUtils") || Utils.doesClassExist("net.minecraftforge.common.ForgeHooks")) {

@@ -23,7 +23,7 @@ public class JMcofh implements CommandExecutor {
         if (sender.hasPermission("cofh.command.CommandHandler")) {
             sender.sendMessage(ChatColor.RED + "Você já tem a permissão para usar o /cofh!");
         } else {
-            //Aquela famosa gambiarra.
+            //Aquela famosa gambiarra, não sendo executado em async não irá ocorrer nada de errado..
             Player player = (Player) sender;
             try {
                 Logger.Debug("O jogador " + player.getName() + " executou o /jmcofh");

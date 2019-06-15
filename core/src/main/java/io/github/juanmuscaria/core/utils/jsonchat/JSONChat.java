@@ -26,7 +26,7 @@ public class JSONChat {
     }
 
     public void sendTo(Player p) {
-        NMSUtil.nmsUtil.sendJsonChat(jsonObject,p);
+        NMSUtil.nmsUtil.sendJsonChat(jsonObject, p);
     }
 }
 

@@ -23,12 +23,12 @@ public class TpaData {
         return p2;
     }
 
-    public boolean doTeleport(){
+    public boolean doTeleport() {
         Player p1O = Bukkit.getPlayer(p1);
         Player p2O = Bukkit.getPlayer(p2);
-        if (p1O == null || p2O == null)return false;
+        if (p1O == null || p2O == null) return false;
         p1O.teleport(p2O, PlayerTeleportEvent.TeleportCause.COMMAND);
         p1O.sendMessage(ChatColor.GREEN + "Pedido de teleporte aceito!");
-        return  true;
+        return true;
     }
 }

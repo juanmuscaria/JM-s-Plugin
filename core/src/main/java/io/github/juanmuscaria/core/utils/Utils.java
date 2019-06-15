@@ -42,12 +42,12 @@ public class Utils {
         return false;
     }
 
-    public static int getUserPermissionInteger(@NotNull String node, @NotNull Player p){
+    public static int getUserPermissionInteger(@NotNull String node, @NotNull Player p) {
         int nodeInt = 0;
         int len = node.split("\\.").length;
         for (PermissionAttachmentInfo perm : p.getEffectivePermissions()) {
             String pn = perm.getPermission();
-            if (pn.startsWith(node+".")) {
+            if (pn.startsWith(node + ".")) {
                 int foundInt = Integer.parseInt(pn.split("\\.")[len]);
                 if (foundInt > nodeInt) {
                     nodeInt = foundInt;

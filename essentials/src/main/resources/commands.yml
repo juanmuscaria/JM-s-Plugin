@@ -25,5 +25,11 @@ commands:
     aliases:
       - homes
       - sethome
-    description: "Permite gerenciar os amigos do cofh core"
+    description: "Sistema de homes simples."
+    permissionmessage: '&cVocê não tem permissão para utilizar este comando.'
+  tpa:
+    enable: true
+    aliases:
+      - teleportar
+    description: "Sistema de pedidos de teleporte!"
     permissionmessage: '&cVocê não tem permissão para utilizar este comando.'

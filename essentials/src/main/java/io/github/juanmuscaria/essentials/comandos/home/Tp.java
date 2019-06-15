@@ -26,36 +26,35 @@ public class Tp extends SubCommand {
         PlayerData data = JMCore.getInstance().playerDataHashMap.get(p.getName());
         HashMap<String, HomeData> homes = (HashMap<String, HomeData>) data.getData().get("homes");
 
-        if (args.length == 2){
+        if (args.length == 2) {
             HomeData homeData = homes.get(args[1]);
-            if(homeData == null)p.sendMessage(ChatColor.RED + "Home não encontrada.");
+            if (homeData == null) p.sendMessage(ChatColor.RED + "Home não encontrada.");
             else {
                 homeData.doTeleport(p);
             }
-        }
-        else{
+        } else {
             String target = args[2];
-            if(Bukkit.getPlayer(target) == null){
-                PlayerData tdata = new PlayerData(target,null);
+            if (Bukkit.getPlayer(target) == null) {
+                PlayerData tdata = new PlayerData(target, null);
                 try {
                     HashMap<String, HomeData> thomes = (HashMap<String, HomeData>) tdata.getData().get("homes");
                     HomeData homeData = thomes.get(args[1]);
-                    if(homeData == null)p.sendMessage(ChatColor.RED + "Home não encontrada.");
+                    if (homeData == null) p.sendMessage(ChatColor.RED + "Home não encontrada.");
                     else {
-                        if (homeData.getPublic() || p.hasPermission("jm.admin.homeData")) homeData.doTeleport(p);
+                        if (homeData.getPublic() || p.hasPermission("jm.admin.home")) homeData.doTeleport(p);
                         else p.sendMessage(ChatColor.RED + "Home não encontrada.");
                     }
                     data.disable();
+                } catch (Exception e) {
+                    p.sendMessage(ChatColor.RED + "Jogador não encontrado.");
                 }
-                catch (Exception e) {p.sendMessage(ChatColor.RED + "Jogador não encontrado.");}
-            }
-            else {
+            } else {
                 PlayerData tdata = JMCore.getInstance().playerDataHashMap.get(target);
                 HashMap<String, HomeData> thomes = (HashMap<String, HomeData>) tdata.getData().get("homes");
                 HomeData homeData = thomes.get(args[1]);
-                if(homeData == null)p.sendMessage(ChatColor.RED + "Home não encontrada.");
+                if (homeData == null) p.sendMessage(ChatColor.RED + "Home não encontrada.");
                 else {
-                    if (homeData.getPublic() || p.hasPermission("jm.admin.homeData")) homeData.doTeleport(p);
+                    if (homeData.getPublic() || p.hasPermission("jm.admin.home")) homeData.doTeleport(p);
                     else p.sendMessage(ChatColor.RED + "Home não encontrada.");
                 }
             }
@@ -64,6 +63,6 @@ public class Tp extends SubCommand {
 
     @Override
     public Boolean validateArguments(String[] args) {
-        return args.length >1;
+        return args.length > 1;
     }
 }

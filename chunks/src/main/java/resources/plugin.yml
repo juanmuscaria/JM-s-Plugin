@@ -1,0 +1,9 @@
+name: jm${artifactId}
+version: ${version}
+description: ${description}
+load: STARTUP
+author: juanmuscaria
+website: https://juanmuscaria.github.io
+main: io.github.juanmuscaria.chunks.BCLRewrite
+depend:
+  - jmcore

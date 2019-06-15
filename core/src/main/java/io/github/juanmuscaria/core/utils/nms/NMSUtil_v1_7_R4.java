@@ -24,7 +24,7 @@ public class NMSUtil_v1_7_R4 extends NMSUtil {
 
     @Override
     public ItemStack deserializeItemStack(String data) {
-        if (data.isEmpty()|| data.equals("AIR"))return null;
+        if (data.isEmpty() || data.equals("AIR")) return null;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new BigInteger(data, 32).toByteArray());
         DataInputStream dataInputStream = new DataInputStream(inputStream);
 
@@ -51,7 +51,7 @@ public class NMSUtil_v1_7_R4 extends NMSUtil {
     @NotNull
     @Override
     public String serializeItemStack(ItemStack item) {
-        if (item == null || item.isSimilar(new ItemStack(Material.AIR)))return "AIR";
+        if (item == null || item.isSimilar(new ItemStack(Material.AIR))) return "AIR";
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
         try {

@@ -20,7 +20,7 @@ public class HomeData implements Serializable {
     private Boolean isPublic;
     private LocalTime cooldown;
 
-    public HomeData(SerializableLocation location, Boolean isPublic){
+    public HomeData(SerializableLocation location, Boolean isPublic) {
         this.location = location;
         this.isPublic = isPublic;
         cooldown = LocalTime.now();
@@ -42,28 +42,27 @@ public class HomeData implements Serializable {
         this.isPublic = isPublic;
     }
 
-    public void doTeleport(Player p){
-        if (LocalTime.now().isBefore(cooldown.plusSeconds(Utils.getUserPermissionInteger("jm.home.cooldown",p)))&& !p.isOp() && !p.hasPermission("jm.admin.home.bypasscooldown")){
-            p.sendMessage(ChatColor.RED + "Espere 3 para poder teleportar-se para essa home novamente.");
+    public void doTeleport(Player p) {
+        if (LocalTime.now().isBefore(cooldown.plusSeconds(Utils.getUserPermissionInteger("jm.home.cooldown", p))) && !p.isOp() && !p.hasPermission("jm.admin.home.bypasscooldown")) {
+            p.sendMessage(ChatColor.RED + "Espere {cooldown} para poder teleportar-se para essa home novamente.".replace("{cooldown}", String.valueOf(Utils.getUserPermissionInteger("jm.home.cooldown", p))));
             return;
         }
         cooldown = LocalTime.now();
-       try {
-           p.sendMessage(ChatColor.GREEN + "Teleportando-se em 3 segundos, aguarde.");
-           Bukkit.getScheduler().runTaskLater(JMEssentials.getInstance(), () -> {
-               Location location = this.location.toLocation();
-               location.getWorld().loadChunk(location.getChunk());
-               p.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
-           }, 60L);
-           }
-       catch (Exception e){
-           p.sendMessage(ChatColor.RED + "Não foi possivel teleportar para a home: " + location.getWorldName()+":"+location.toString());
-           Logger.Warn("O jogador " + p.getName() + " tentou ir para uma home invalida!\n" + "HomeData: " + location.getWorldName()+":"+location.toString());
-           e.printStackTrace();
-       }
-   }
+        try {
+            p.sendMessage(ChatColor.GREEN + "Teleportando-se em {cooldown} segundos, aguarde.".replace("{cooldown}", String.valueOf(Utils.getUserPermissionInteger("jm.home.cooldown", p))));
+            Bukkit.getScheduler().runTaskLater(JMEssentials.getInstance(), () -> {
+                Location location = this.location.toLocation();
+                location.getWorld().loadChunk(location.getChunk());
+                p.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
+            }, 20L * (long)Utils.getUserPermissionInteger("jm.home.cooldown", p));
+        } catch (Exception e) {
+            p.sendMessage(ChatColor.RED + "Não foi possivel teleportar para a home: " + location.getWorldName() + ":" + location.toString());
+            Logger.Warn("O jogador " + p.getName() + " tentou ir para uma home invalida!\n" + "HomeData: " + location.getWorldName() + ":" + location.toString());
+            e.printStackTrace();
+        }
+    }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         cooldown = LocalTime.now();
     }

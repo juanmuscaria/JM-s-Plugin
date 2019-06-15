@@ -6,7 +6,7 @@ import io.github.juanmuscaria.core.data.PlayerData;
 import java.util.HashMap;
 
 public class PlayerDataHandler implements IPlayerDataHandler {
-    public PlayerDataHandler(){
+    public PlayerDataHandler() {
         PlayerData.addHandler(this);
     }
 
