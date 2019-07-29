@@ -13,7 +13,9 @@ import io.github.juanmuscaria.essentials.data.PluginConfig;
 import io.github.juanmuscaria.essentials.data.TpaData;
 import io.github.juanmuscaria.essentials.event.BlockCommand;
 import io.github.juanmuscaria.essentials.event.BlockTab;
+import io.github.juanmuscaria.essentials.task.OnlineTime;
 import io.github.juanmuscaria.essentials.utils.Logger;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -25,17 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JMEssentials extends JavaPlugin {
-    public static Cache<String, TpaData> tpaCache = new Cache<>(120000L, new Function<TpaData>() {
-        @Override
-        public boolean run(TpaData value) {
-            //Player p1 = Bukkit.getPlayer(value.getP1());
-            //Player p2 = Bukkit.getPlayer(value.getP2());
-            //return (p1 != null && p2 != null);
-            return false;
-        }
-    }, new Function<TpaData>() {
-        @Override
-        public boolean run(TpaData value) {
+    public static Cache<String, TpaData> tpaCache = new Cache<>(120000L,
+            new Function<TpaData>() {@Override public boolean run(TpaData value) { return false; }},
+            new Function<TpaData>() {@Override public boolean run(TpaData value) {
             Player p1 = Bukkit.getPlayer(value.getP1());
             if (p1 != null) p1.sendMessage(ChatColor.RED + "Pedido de tpa expirou.");
             Player p2 = Bukkit.getPlayer(value.getP2());
@@ -87,13 +81,36 @@ public class JMEssentials extends JavaPlugin {
     }
 
     private void loadEvents(){
-        if ((!(APIs.protocolManager == null)) && io.github.juanmuscaria.core.data.PluginConfig.pluginConfig.blocktab_enable) //Verifica se o protocollib stá instalado e se está ativado para registrar o evento.
+        if ((!(APIs.protocolManager == null)) && PluginConfig.pluginConfig.blocktab_enable) //Verifica se o protocollib stá instalado e se está ativado para registrar o evento.
             eventos.add(new BlockTab());
-        if (io.github.juanmuscaria.core.data.PluginConfig.pluginConfig.blockedcmds_enable) eventos.add(new BlockCommand()); //Registra o BlockedCmds
+        if (PluginConfig.pluginConfig.blockedcmds_enable) eventos.add(new BlockCommand()); //Registra o BlockedCmds
         //if ((!(APIs.protocolManager == null))) eventos.add(new PAServerPing()); //Sad isso não funciona no thermos, terei que fazer uma gambiarra.
     }
 
     private void loadTasks(){
+        if (PluginConfig.pluginConfig.ontime_eable) {
+            io.github.juanmuscaria.core.utils.Logger.Debug("Criando Asynchronous task ontime");
+            tasks.add(new OnlineTime().runTaskTimerAsynchronously(this, 0L, 1000L)); //Cria a task do ontime
+        }
+    }
 
+    public void onReload() { //Lógica de reload, melhor que usar o reload via plugman que pode quebrar tudo.
+        //TODO:Refazer esse sistema.
+        Logger.Debug("Iniciando reloading.");
+        eventos.forEach((E) -> {
+            if (!(E == null)) E.reload();
+        });
+        try {
+            PluginConfig.pluginConfig.reload();
+        } catch (InvalidConfigurationException e) {
+            Logger.Error("Erro ao recarregar o arquivo de configuração");
+            e.printStackTrace();
+        }
+        tasks.forEach((T) -> {
+            if (!(T == null)) T.cancel();
+        });
+        tasks.clear();
+        loadTasks();
+        Logger.Debug("Reloading completo.");
     }
 }

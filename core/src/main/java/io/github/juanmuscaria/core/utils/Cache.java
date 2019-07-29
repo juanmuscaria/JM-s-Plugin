@@ -171,5 +171,8 @@ public class Cache<K, V> {
             }
         }
     }
+    public Map<K,V> getInternal(){
+        return internal;
+    }
 
 }

@@ -6,7 +6,6 @@ import io.github.juanmuscaria.core.data.PlayerData;
 import io.github.juanmuscaria.core.data.PluginConfig;
 import io.github.juanmuscaria.core.event.IEvent;
 import io.github.juanmuscaria.core.event.PlayerDataEvents;
-import io.github.juanmuscaria.core.task.OnlineTime;
 import io.github.juanmuscaria.core.utils.CommandRegister;
 import io.github.juanmuscaria.core.utils.Logger;
 import io.github.juanmuscaria.core.utils.Utils;
@@ -65,7 +64,7 @@ public class JMCore extends JavaPlugin {
             if (!(T == null)) T.cancel();
         });
         tasks.clear();
-        loadTaks();
+        loadTasks();
         Logger.Debug("Reloading completo.");
     }
 
@@ -86,7 +85,7 @@ public class JMCore extends JavaPlugin {
         NMSUtil.init(); //Inicia o NMSUtil, por ele ser static e ele usar instancias ele precisa ser iniciado por um method call.
 
         loadEvents(); //Carrega os eventos.
-        loadTaks(); //Carrega as tasks
+        loadTasks(); //Carrega as tasks
 
         for (Player p : getServer().getOnlinePlayers()) { //Verifica se tem jogadores online, assim evita problema com o player data.
             PlayerData data = new PlayerData(p.getName().toLowerCase(), p);
@@ -102,11 +101,7 @@ public class JMCore extends JavaPlugin {
         eventos.add(new PlayerDataEvents()); //Evento essencial para manipular os dados dos jogadores.
     }
 
-    private void loadTaks() {
-        tasks.add(new io.github.juanmuscaria.core.task.Core().runTaskTimer(this, 0L, 100L)); //TODO:Remover isso?
-        if (PluginConfig.pluginConfig.ontime_eable) {
-            Logger.Debug("Criando Asynchronous task ontime");
-            tasks.add(new OnlineTime().runTaskTimerAsynchronously(this, 0L, 1000L)); //Cria a task do ontime
-        }
+    private void loadTasks() {
+
     }
 }

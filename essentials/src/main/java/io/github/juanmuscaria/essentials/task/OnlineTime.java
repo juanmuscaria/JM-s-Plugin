@@ -1,8 +1,9 @@
-package io.github.juanmuscaria.core.task;
+package io.github.juanmuscaria.essentials.task;
 
 import io.github.juanmuscaria.core.JMCore;
-import io.github.juanmuscaria.core.data.PluginConfig;
-import io.github.juanmuscaria.core.utils.Logger;
+import io.github.juanmuscaria.essentials.JMEssentials;
+import io.github.juanmuscaria.essentials.data.PluginConfig;
+import io.github.juanmuscaria.essentials.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,7 +14,7 @@ import java.util.Arrays;
 public class OnlineTime extends BukkitRunnable {
     @Override
     public void run() {
-        Bukkit.getScheduler().runTask(JMCore.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTask(JMEssentials.getInstance(), new Runnable() {
             @Override
             public void run() {
                 Logger.Debug("Executando ontime");

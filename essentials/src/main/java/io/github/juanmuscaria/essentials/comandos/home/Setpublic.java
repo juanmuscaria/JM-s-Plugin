@@ -28,7 +28,11 @@ public class Setpublic extends SubCommand {
 
         HomeData homeData = homes.get(args[1]);
         if (homeData == null) p.sendMessage(ChatColor.RED + "Home inexistente.");
-        else homeData.setPublic(!homeData.getPublic());
+        else {
+            homeData.setPublic(!homeData.getPublic());
+            p.sendMessage(ChatColor.GREEN + "Agora essa home é " + (homeData.getPublic() ?  ChatColor.RED + "publica" : ChatColor.BLUE + "privada"));
+        }
+
 
     }
 

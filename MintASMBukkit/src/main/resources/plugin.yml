@@ -1,9 +1,7 @@
-name: jm${artifactId}
+name: ${artifactId}
 version: ${version}
 description: ${description}
-load: POSTWORLD
+load: STARTUP
 author: juanmuscaria
 website: https://juanmuscaria.github.io
-main: io.github.juanmuscaria.chunks.BCLRewrite
-depend:
-  - jmcore
+main: io.github.juanmuscaria.mintasm.bukkit.MintASM
